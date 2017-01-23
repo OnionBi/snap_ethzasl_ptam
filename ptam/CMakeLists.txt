@@ -117,6 +117,12 @@ IF(CMAKE_BUILD_TYPE MATCHES Release)
  set_property(TARGET ptam APPEND_STRING PROPERTY COMPILE_FLAGS "-O3 ")
  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsee -funsafe-loop-optimizations -fno-signed-zeros -fno-math-errno -funroll-loops")
 ENDIF(CMAKE_BUILD_TYPE MATCHES Release)
+
+if(${CMAKE_SYSTEM_PROCESSOR} MATCHES arm)
+  message("enabling -mfpu=neon -mfloat-abi=softfp for ARM architecture")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=armv7-a -mcpu=cortex-a9 -mfpu=neon -mtune=cortex-a9 -mvectorize-with-neon-quad -ffast-math")
+endif(${CMAKE_SYSTEM_PROCESSOR} MATCHES arm)
+
 add_dependencies(ptam DEPS ${${PROJECT_NAME}_EXPORTED_TARGETS}})
 
 target_link_libraries(ptam ${PTAM_LIBRARIES} ${OpenCV_LIBS} ${catkin_LIBRARIES})
